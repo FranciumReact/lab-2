@@ -1,5 +1,9 @@
 package com.example.lab_2
 
+// Claude helped with the imports needed
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -62,6 +66,8 @@ fun CityListScreen(
     modifier: Modifier = Modifier
 ) {
     var newCityName by remember { mutableStateOf("") }
+    var chooseCity by remember { mutableStateOf("") }
+
     Column(modifier = modifier.fillMaxSize()) {
         Row(modifier = Modifier.padding(16.dp)) {
             OutlinedTextField(
@@ -83,14 +89,14 @@ fun CityListScreen(
             ) {
                 Text("Add City")
             }
-
+            // space
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(
                 onClick = {
-                    if (newCityName.isNotBlank()) {
-                        onDeleteCity(newCityName)
-                        newCityName = ""
+                    if (chooseCity.isNotBlank()) {
+                        onDeleteCity(chooseCity)
+                        chooseCity = ""
                     }
                 }
             ) {
@@ -104,19 +110,32 @@ fun CityListScreen(
             // items(cities) loops through the city list and
             // creates one UI row for each city
             items(cities) { city ->
-                CityRow(city = city)
+                CityRow(
+                    city = city,
+                    cityChosen = (city == chooseCity),
+                    onClick = { chooseCity = city }
+                )
             }
         }
     }
 }
 
 @Composable
-fun CityRow(city: String) {
+fun CityRow(
+    city: String,
+    // Claude assisted me with these next two
+    cityChosen: Boolean,
+    onClick: () -> Unit
+) {
     Text (
         text = city,
         fontSize = 28.sp,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick () }
+            // Claude showed me documentation for the highlight when you click it
+            .background(
+                if (cityChosen) Color.Gray else Color.Transparent)
             .padding(horizontal = 18.dp, vertical = 14.dp)
     )
 }
